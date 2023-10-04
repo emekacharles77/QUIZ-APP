@@ -57,7 +57,7 @@ const timer=document.querySelector('.timer-span');
 const timerzone=document.querySelector('.timezone');
 const line=document.querySelector(".time-line");
 // const button=document.createElement("button");
-console.log(line)
+console.log(span,span2)
 // console.log(question,answerbutton,nextbutton)
 
 let currentquestionindex=0;
@@ -70,9 +70,6 @@ function startquiz(){
     showquestion();
     startQuizTimer();
     startTimeline();
-    timerzone.innerHTML="TIME ON";
-    // startQuizTimer();
-        // timerzone.innerHTML="TIME ON:";
 }
 
 function showquestion(){
@@ -107,9 +104,9 @@ function  resetState(){
 startquiz();
 
 function SelectAnswer(e){
-    clearInterval(quiztimerinterval);
-    clearInterval(counterline);
-    timerzone.innerHTML="ON HOLD"
+    // clearInterval(quiztimerinterval);
+    // clearInterval(counterline);
+    // timerzone.innerHTML="ON HOLD"
     const selectedbtn=e.target;
     const isCorrect=selectedbtn.dataset.correct==="true";
     if(isCorrect){
@@ -132,6 +129,9 @@ nextbutton.addEventListener('click', ()=>{
         handlenextquestion();
     }else{
         startquiz();
+        window.location.reload()
+        startTimeline();
+        startQuizTimer()
     }
 })
 
@@ -141,10 +141,10 @@ function handlenextquestion(){
     currentquestionindex++;
     if(currentquestionindex<questions.length){
         showquestion()
-        startQuizTimer();
-        startTimeline()
+        // startQuizTimer();
+        // startTimeline()
         // clearInterval(counterline);
-        timerzone.innerHTML="TIME ON";
+        // timerzone.innerHTML="TIME ON";
     }else{
         showscore();
     }
@@ -157,53 +157,79 @@ function showscore(){
     nextbutton.style.display='block';
     quiznumber.style.display="none";
     clearInterval(quiztimerinterval);
-    timerzone.innerHTML="TIME OFF";
-    timer.innerHTML='00';
+    timerdiv.style.display="none"
     line.style.width="0"
     clearInterval(counterline);
 
 }
 
+let quiztimer=2;
+// let quizTimeinMenutes=quiztimer*60*60;
+let quiztime=quiztimer*60;
+// console.log(quiztime ,quizTimeinMenutes)
+
+
+let leadingsec=0;
+let leadingmin=0;
+
 function startQuizTimer(){
-    quiztimer=15;
+     
     quiztimerinterval=setInterval(()=>{
-        quiztimer--;
-        if(quiztimer<0){
-            quiztimer=0
+            quiztime--;
+            let sec=Math.floor(quiztime % 60);
+            let min= Math.floor(quiztime / 60);
+            timer.innerHTML=`${leadingmin}:${leadingsec}`;
+        // console.log(sec,min)
+         
+        if(min<10){
+            leadingmin="0" + min.toString();
+        }else{
+            leadingmin=min;
         }
-        timer.innerHTML=quiztimer
-        if(quiztimer<10){
-            let addzero=timer.innerHTML;
-            timer.innerHTML='0' + addzero;
+
+        if(sec<10){
+            leadingsec="0" + sec.toString()
+        }else{
+            leadingsec=sec;
         }
-        if(quiztimer<1){
-            clearInterval(quiztimerinterval);
-            timerzone.innerHTML="TIME OFF"
-        }
-        lockbutton()        
+
+        //  timer.innerHTML=leadingmin + ":" + leadingsec
+
+
+    if(quiztime<0){
+        quiztime=0;
+    clearInterval(quiztimerinterval);
+    lockbutton() 
+    // timerzone.innerHTML="TIME OFF"
+    }
+        //  console.log(timer)
     }, 1000);
 }
 
-let time=0;
-let widthvalue=0;
+
+
+
 function startTimeline(){
     let time=0;
     counterline=setInterval(()=>{
         time+=1
-        line.style.width=time + "px";
-        if(time > 599){
-            clearInterval(counterline)
+        line.style.width=time + "%";
+        
+        if(time > 99){
+            clearInterval(counterline);
         }
-        // console.log(time)
 
-    }, 21)
+    }, 1200)
 
 }
+
+     
+
 function lockbutton(){
     Array.from(answerbutton.children).forEach(button=>{
-        if(quiztimer<1){
+        if(quiztime<1){
             button.disabled=true
-            nextbutton.style.display="block"
+            // nextbutton.style.display="block"
         }
     })
 }
