@@ -57,7 +57,7 @@ const timer=document.querySelector('.timer-span');
 const timerzone=document.querySelector('.timezone');
 const line=document.querySelector(".time-line");
 // const button=document.createElement("button");
-console.log(span,span2)
+// console.log(span,span2)
 // console.log(question,answerbutton,nextbutton)
 
 let currentquestionindex=0;
@@ -179,7 +179,6 @@ function startQuizTimer(){
             let sec=Math.floor(quiztime % 60);
             let min= Math.floor(quiztime / 60);
             timer.innerHTML=`${leadingmin}:${leadingsec}`;
-        // console.log(sec,min)
          
         if(min<10){
             leadingmin="0" + min.toString();
